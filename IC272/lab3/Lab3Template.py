@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 def read_data(path_to_file):
 	""" Returns Pandas dataframe for given csv file
 	
@@ -12,8 +13,10 @@ def read_data(path_to_file):
 		-------
 		pandas.Dataframe
 	"""
-	pass 
-def show_box_plot(attribute_name,dataframe):
+	data = pd.read_csv(path_to_file)
+	return data
+
+def show_box_plot(attribute_name,dataframe,save_image=False):
 	""" Displays boxplot for atrribute
 
 		Parameters
@@ -22,11 +25,20 @@ def show_box_plot(attribute_name,dataframe):
 			Attribute selected
 		dataframe: pandas.Dataframe
 			DataFrame for the given dataset
+		save_image: bool
+			For saving the plot as a jpeg image file
 		Returns
 		-------
 		None
 	"""
-	pass
+	plt.boxplot(list(data[attribute_name]))
+
+	if save_image:
+		plt.savefig("./plots/"+attribute_name+"_boxplot.jpeg")
+	plt.show()
+
+
+
 def replace_outliers(dataframe):
 	""" Replaces the outliers in the given dataframe
 	
@@ -38,6 +50,7 @@ def replace_outliers(dataframe):
 		-------
 		pandas.Dataframe
 	"""
+
 	pass
 def range(dataframe,attribute_name):
 	""" Gives Range of Selected Attribute
