@@ -1,0 +1,15 @@
+class data_analysis_model
+
+- range(self,attribute_name)
+- replace_outliers_by_median(self,attribute_name)
+- boxplot(self,attribute_name,show=True,savefig=False)
+- boxplot_all(self,savefig=False)
+- replace_outliers_by_median_all(self)
+- min_max_normalization(self,new_min,new_max,attribute_name)
+- standardize_attribute(self,attribute_name)
+
+
+class data_analysis_model_sklearn
+
+- min_max_scaler(self,attribute_name,new_min,new_max)
+- standardize(self,attribute_name)

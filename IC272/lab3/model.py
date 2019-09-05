@@ -61,8 +61,9 @@ class data_analysis_model(object):
         # v' = (v-mn)*(new_mx-new_mn)/(mx-mn) + new_mn;
         mn = min(self.dataframe[attribute_name])
         mx = max(self.dataframe[attribute_name])
-        for i in range(self.size):
-            self.dataframe[attribute_name][i] = (self.dataframe[attribute_name][i]-mn)*(new_max-new_min)/(mx-mn) + new_min
+        if mn != mx:
+            for i in range(self.size):
+                self.dataframe[attribute_name][i] = (self.dataframe[attribute_name][i]-mn)*(new_max-new_min)/(mx-mn) + new_min
     
     def standardize_attribute(self,attribute_name):
         mean = self.dataframe[attribute_name].mean()
