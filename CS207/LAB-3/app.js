@@ -4,6 +4,7 @@ var http = require('http')
 var path = require('path')
 var {parse} = require('querystring')
 var url = require('url')
+var dbUtils = require('./dbUtils')
 
 app = http.createServer((req,res)=>{
     if(req.method == 'POST'){
@@ -16,6 +17,7 @@ app = http.createServer((req,res)=>{
         req.on('end',()=>{
             var parsedBody = parse(body);
             console.log(parsedBody.dbName+" "+parsedBody.tableName);
+            dbUtils.createDB(parsedBody.dbName)
             res.writeHead(200,{'content':"text/html"});
             res.end('Database Made.','utf-8');
         })
