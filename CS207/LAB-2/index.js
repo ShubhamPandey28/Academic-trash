@@ -47,7 +47,7 @@ app = http.createServer((req,res)=>{
             if(error){
                 if(error.code == 'ENOENT'){ //ENOENT (No such file or directory): Commonly raised by fs operations to indicate that a component of the specified pathname does not exist — no entity (file or directory) could be found by the given path.
                     fs.readFile("./404.html",(err,content)=>{
-                        res.writeHead(404,{'Content-type':contentType});
+                        res.writeHead(404,{'Content-type':"text/html"});
                         res.end(content,"utf-8");   
                     });
                 }
