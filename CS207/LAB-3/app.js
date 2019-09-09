@@ -15,9 +15,9 @@ app = http.createServer((req,res)=>{
         });
 
         req.on('end',()=>{
-            var parsedBody = parse(body);
-            console.log(parsedBody.dbName+" "+parsedBody.tableName);
-            dbUtils.createDB(parsedBody.dbName)
+            var parsedBody = parse(body)
+            console.log(parsedBody.dbName+" "+parsedBody.tableName)
+            dbUtils.createDB(parsedBody.dbName,parsedBody.tableName,show=true)
             res.writeHead(200,{'content':"text/html"});
             res.end('Database Made.','utf-8');
         })
