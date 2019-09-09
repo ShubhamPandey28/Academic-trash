@@ -31,7 +31,7 @@ module.exports.createDB = (dbName,tableName,show=false)=>{
         if(err){
             console.log("Unable to connect to the database --"+err.code);        
         }
-        else{}
+        else{
             console.log("Connected to the database.");
             con.query("CREATE DATABASE "+dbName+";",(err)=>{
                 if(err){
