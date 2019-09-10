@@ -6,6 +6,7 @@ var {parse} = require('querystring')
 var url = require('url')
 var dbUtils = require('./dbUtils')
 
+
 app = http.createServer((req,res)=>{
     if(req.method == 'POST'){
         var body = "";
@@ -17,7 +18,21 @@ app = http.createServer((req,res)=>{
         req.on('end',()=>{
             var parsedBody = parse(body)
             console.log(parsedBody.dbName+" "+parsedBody.tableName)
-            dbUtils.createDB(parsedBody.dbName,parsedBody.tableName,show=true)
+            dbUtils.createDB(parsedBody.dbName,true,(err)=>{
+                if(err){
+                    console.log("Database Creation process ended with error code: ",err.code);
+                }
+                else{
+                    dbUtils.createTable(parsedBody.dbName,parsedBody.tableName,(err)=>{
+                        if(err){
+                            console.log("Unable to create Table: ",err.code);
+                        }
+                        else{
+                            console.log("Table named '"+parsedBody.tableName+"' created succesfully.");
+                        }
+                    })
+                }
+            })
             res.writeHead(200,{'content':"text/html"});
             res.end('Database Made.','utf-8');
         })
@@ -68,3 +83,4 @@ app.listen(port,(error)=>{
         console.log("listening to the port: "+port);
     }
 })
+
