@@ -2,11 +2,10 @@ import numpy as np
 from math import log
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split as tts
+from scipy.stats import multivariate_normal as mnorm
 
 def getGaussian(x,mean,sig):
     return -(((x-mean)**2)/sig**2 + 2*log(sig))
-
-
 
 class bayesClassifier(object):
 
@@ -21,7 +20,7 @@ class bayesClassifier(object):
         self.infoMatrix = None
         self.fitted = False
         self.keys = None
-
+        self.ce = False
     
     
     def fit(self,dataframe,target_attribute):
@@ -52,26 +51,38 @@ class bayesClassifier(object):
                     mp[self.y_train[i]] = [self.X_train[i]]
             
             self.keys = list(mp.keys())
-            
+
+            self.info = {}
+
+            for k in self.keys:
+                self.info[k] = [np.mean(mp[k],axis=0),np.cov(np.array(mp[k]).T)]
+            '''
             for j in range(len(self.keys)):
                 l = np.mean(mp[self.keys[j]],axis=0)
                 l2 = np.std(mp[self.keys[j]],axis=0)
-                for i in range(self.noatt):
+                for i in range(len(self.X_train[0])):
                     self.infoMatrix[j][i][0] = l[i]
                     self.infoMatrix[j][i][1] = l2[i]
+            '''
         else:
-            raise "Please fit the data into the model first."
+            raise Exception("Please fit the data into the model first.")
     
     
     
     def predict(self,x):
         lhds = []
-        for j in range(len(self.keys)):
-            l = 0
-            for i in range(len(x)):
-                l += getGaussian(x[i],self.infoMatrix[j][i][0],self.infoMatrix[j][i][1])
+        for i in range(len(self.keys)):            
+            l = mnorm.pdf(x,mean=self.info[self.keys[i]][0],cov=self.info[self.keys[i]][1], allow_singular=True)
             lhds.append(l)
         mx = lhds.index(max(lhds))
         return self.keys[mx]
     
-    
+    def geteff(self):
+        self.confMat = [[0,0],[0,0]]
+        for i in range(len(self.X_test)):
+            self.confMat[self.predict(self.X_test[i])][self.y_test[i]] += 1
+
+        self.eff = (self.confMat[0][0] + self.confMat[1][1])*100/len(self.X_test)
+
+        return self.eff
+
