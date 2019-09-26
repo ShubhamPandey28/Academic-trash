@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import linalg
+from sklearn.model_selection import train_test_split as tts
 
 
 class kNN(object):
@@ -14,19 +15,22 @@ class kNN(object):
         self.fitted = False
         self.ce = False
         self.eff = None
+        self.confmat = []
 
     def fit(self,data,target):
         '''
             data: csv format,
             target_attribute: list of the attribute
         '''
-        k = int(len(data)*(0.7))
-        self.train_data = [data[i] for i in range(k)]
-        self.test_data = [data[i] for i in range(k,len(data))]
+        
+        #self.train_data = [data[i] for i in range(k)]
+        #self.test_data = [data[i] for i in range(k,len(data))]
         self.target = target
-        self.test_target = target[k:]
+        #self.train_target = target[:k]
+        #elf.test_target = target[k:]
         self.fitted = True
-
+        self.train_data, self.test_data,self.train_target, self.test_target = tts(data,target,test_size=.3,random_state=42,shuffle=True)
+    
     def getdistance(self,p1,p2):
         dist = 0
         for i in range(len(p1)):
@@ -34,7 +38,7 @@ class kNN(object):
         return dist**0.5
     
     @classmethod
-    def get_maxcount_class(self,l):
+    def getmodeclass(self,l):
         s = set(l)
         clss = None
         mx = 0
@@ -47,13 +51,13 @@ class kNN(object):
 
     def getclassof(self,test_point):   
         if(self.fitted):
-            tup = [(self.getdistance(test_point,self.train_data[i]),self.target[i]) for i in range(len(self.train_data))]
+            tup = [(self.getdistance(test_point,self.train_data[i]),self.train_target[i]) for i in range(len(self.train_data))]
             tup2 = sorted(tup,key = lambda x: x[0])
             
             l = []
             for i in range(self.k):
                 l.append(tup2[i][1])
-            return self.get_maxcount_class(l)
+            return self.getmodeclass(l)
 
         else:
             print("You didn't fit any data to the model.")
@@ -62,10 +66,23 @@ class kNN(object):
     def getefficiency(self):
         if(not self.ce):
             eff = 0
+            fn=0
+            tp=0
+            tn=0
+            fp=0
             for i in range(len(self.test_data)):
-                if(self.test_target[i] == self.getclassof(self.test_data[i])):
+                clss = self.getclassof(self.test_data[i])
+                if(int(self.test_target[i]) == 0 and int(clss) == 0):
                     eff += 1
-            self.eff = eff*100/len(self.test_data)
+                    tn += 1
+                elif(int(self.test_target[i]) == 1 and int(clss)== 1):
+                    eff += 1
+                    tp += 1
+                elif(int(self.test_target[i]) == 1 and int(clss) == 0):
+                    fn += 1
+                elif(int(self.test_target[i]) == 0 and int(clss) == 1):
+                    fp += 1
+            self.eff = [eff*100/len(self.test_data),[[tp,tn],[fp,fn]]]
 
         return self.eff
     
@@ -73,24 +90,26 @@ class kNN(object):
         self.ce = False
         xs = []
         ys = []
-        for k in range(1,mxk):
+        preff = 0
+        for k in range(1,mxk,2):
             self.k = k
+            eff = self.getefficiency()
             xs.append(k)
-            ys.append(self.getefficiency())
-        
+            ys.append(eff[0])
+            preff = max(preff,eff[0])
+            self.confmat.append(eff)
+        self.maxeff = preff
         plt.plot(xs,ys)
         plt.show()
         plt.clf()
+
+
 
 class linear_regretion(object):
 
     def __init__(self,data,target):
 
-        k = int(len(data)*2/3)
-        self.train_data = np.array([data[i] for i in range(k)])
-        self.test_data = np.array([data[i] for i in range(k,len(data))])
-        self.train_target = np.array([target[i] for i in range(k)])
-        self.test_target = np.array([target[i] for i in range(k,len(target))])
+        self.train_data, self.test_data,self.train_target, self.test_target = tts(data,target,test_size=.3,random_state=42,shuffle=True)        
         self.w = linalg.solve(np.dot(self.train_data.T,self.train_data),np.dot(self.train_data.T,self.train_target))
         self.ce = False
         self.eff = 0

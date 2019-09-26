@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++14 -g  -rdynamic CMakeFiles/cs202assignment1.dir/problem1.cpp.o CMakeFiles/cs202assignment1.dir/problem5.cpp.o CMakeFiles/cs202assignment1.dir/problem3.cpp.o CMakeFiles/cs202assignment1.dir/sortingImp.cpp.o  -o cs202assignment1 libseqLinearList.hpp.a -lsorting.hpp 
