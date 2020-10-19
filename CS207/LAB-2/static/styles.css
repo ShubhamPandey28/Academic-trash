@@ -1,0 +1,21 @@
+body{
+    background-color: rgb(233, 229, 10);
+}
+.div-1{
+    margin: 10px;
+}
+.table{
+    padding: 10px;
+    margin-left: 30%;
+    margin-right: 30%;
+    display: inline-table;
+}
+.ta{
+    height: 100px;
+    width: 200px;
+    overflow: scroll;
+}
+#comments{
+    padding-top: 2px;
+}
+

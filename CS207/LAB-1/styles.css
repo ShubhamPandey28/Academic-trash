@@ -1,0 +1,57 @@
+.slidercontainer{
+    width: 100%;
+}
+html{
+    background: lightblue;
+}
+
+
+.top-bar{
+    text-align: center;
+}
+.nav-button{
+    background: grey;
+    color: black;
+    border: 1px;
+    padding: 8px;
+    height: 100%;
+    width: 20%;
+    text-align: center;
+}
+a.navButton{
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+.table-bordered{
+    border: black;
+    background: #d3d3d3;
+    align-content: center;
+}
+
+.content{
+    align-items: center;
+}
+
+.slider{
+    -webkit-appearance: none;
+    appearance: none;
+    height: 25px;
+    background: black;
+    outline: none;
+    opacity: 1;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover{
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    background: rgb(1, 99, 94);
+    cursor: pointer;
+}
